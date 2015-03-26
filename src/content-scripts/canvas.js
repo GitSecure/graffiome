@@ -2,6 +2,7 @@
   var canvas;
   var canvasFabric;
 
+
   var settings = {
     tabUrl:  CryptoJS.SHA1(document.URL).toString()
   };
@@ -128,7 +129,7 @@ var drawOtherUsersCanvasElement = function(context, data){
           var userCanvas = $('.'+ user);
           addOneTimeClickEvent(userCanvas, addImage, request.image);
         });
-      }
+      } 
     }
   );
 

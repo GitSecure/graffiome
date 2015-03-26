@@ -27,6 +27,7 @@ var sendTabMessage = function(status, tabID) {
  } else {
    msg = 'off';
  }
+
  chrome.tabs.sendMessage(tabID, {toggle: msg}, function(res){
    console.log('toggleStatus:', res);
  });
@@ -38,9 +39,16 @@ angular.module('graffio.mainController', [])
   var ref = new Firebase('https://radiant-heat-919.firebaseio.com');
 
   $scope.draw = function(){
+    chrome.runtime.sendMessage({"action": "toggleDrawingStatus"});
     $state.go('draw');
-    //start drawing functionality
+    $scope.toggleStatus();
   }
+
+  $scope.toggleStatus = function() {
+    getStatus(function(status, tabID) {
+      sendTabMessage(status, tabID);
+    });
+  };
 
   $scope.logout = function() {
     ref.unauth();
@@ -57,34 +65,20 @@ angular.module('graffio.mainController', [])
   // needs to use $scope.$apply since these callback functions otherwise wouldn't trigger a $digest event
   // even though they would update the $scope variable values...
   // $scope.$apply triggers the $digest, which in turn is what causes a UI update
-  var setStatusUi = function(status) {
-    console.log('setStatusUI called...');
-    console.log('setStatusUI status: ', status);
-    $scope.$apply(function() {
-      if (status === 'off') {
-        $scope.onOffButtonTxt = 'On';
-      } else {
-        $scope.onOffButtonTxt = 'Off';
-      }
-    });
-  };
+  // var setStatusUi = function(status) {
+  //   console.log('setStatusUI called...');
+  //   console.log('setStatusUI status: ', status);
+  //   $scope.$apply(function() {
+  //     if (status === 'off') {
+  //       $scope.onOffButtonTxt = 'On';
+  //     } else {
+  //       $scope.onOffButtonTxt = 'Off';
+  //     }
+  //   });
+  // };
     
   // function called when button is pressed by user wishing to toggle the current state
-  $scope.toggleStatus = function() {
 
-    // figure out what existing state is from the content script
-    getStatus(function(status, tabID) {
-      // send a message to the tab and also set the current button value to be the opposite
-      // ie. if a user clicks 'On' it should send a message telling the app to start drawing
-      // and also change the UI here to indicate that the next click will turn the app off
-      sendTabMessage(status, tabID);
-      if (status === 'off') {
-        setStatusUi('on');  
-      } else {
-        setStatusUi('off');
-      }
-    });
-  };
  
   console.log('initial get status called...');
   // Initial call to getStatus to figure out what status the page was in last.

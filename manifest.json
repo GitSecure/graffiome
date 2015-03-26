@@ -9,7 +9,8 @@
     "tabs",
     "activeTab",
     "http://*/*", 
-    "https://*/*"
+    "https://*/*",
+    "storage"
   ],
   "icons": {
     "16": "static/graffiome_logo_16.png",

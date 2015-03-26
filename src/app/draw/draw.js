@@ -46,8 +46,16 @@ angular.module('graffio.drawController', [
 
   $scope.thickness = 1;
 
+  $scope.toggleStatus = function() {
+    getStatus(function(status, tabID) {
+      sendTabMessage(status, tabID);
+    });
+  };
+
   $scope.end = function(){
+    chrome.runtime.sendMessage({"action": "toggleDrawingStatus"});
     $state.go('main');
+    $scope.toggleStatus();
   }
 
 }).controller('onOffController', function($scope){ 

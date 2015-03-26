@@ -2,6 +2,8 @@
 var userToken = null;
 var ref = new Firebase('https://radiant-heat-919.firebaseio.com/web/data/sites/');
 var registeredSites = {}; //firebase event listener
+var isDrawingState = false;
+
 
 // inform all tabs that the token as changed
 var broadcastData = function(site, user, data) {
@@ -89,6 +91,12 @@ chrome.runtime.onMessage.addListener(function(request,sender,sendResponse) {
   } else if (request.action === 'startSiteData') {
     registerSite(request.site);
   } else if (request.action === 'stopSiteData') {
-    unregisterSite(request.site);
+    unregisterSite(reqest.site);
+  } else if (request.action === 'getDrawingStatus'){
+    console.log("geteDrawingStatus")
+    sendResponse({"state": isDrawingState});
+  } else if (request.action === 'toggleDrawingStatus'){
+    console.log("toggleDrawingStatus")
+    isDrawingState = !isDrawingState;
   }
 });
