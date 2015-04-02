@@ -1,3 +1,5 @@
+'strict';
+
 angular.module('graffio.mainFactory', []).factory('mainFactory', function() {
   var factory = {};
 
@@ -39,6 +41,17 @@ angular.module('graffio.mainFactory', []).factory('mainFactory', function() {
         scope.onOffButtonTxt = 'On';
       } else {
         scope.onOffButtonTxt = 'Off';
+      }
+    });
+  };
+
+  factory.toggleStatus = function(status, scope) {
+    factory.getStatus(function(status, tabID) {
+      factory.sendTabMessage(status, tabID);
+      if (status === 'off') {
+        factory.setStatusUi('on', scope);
+      } else {
+        factory.setStatusUi('off', scope);
       }
     });
   };

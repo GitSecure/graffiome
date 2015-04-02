@@ -16,16 +16,7 @@ angular.module('graffio.mainController', [])
 }).controller('onOffController', function($scope, mainFactory){
   $scope.onOffButtonTxt = 'loading...';
 
-  $scope.toggleStatus = function() {
-    mainFactory.getStatus(function(status, tabID) {
-      mainFactory.sendTabMessage(status, tabID);
-      if (status === 'off') {
-        mainFactory.setStatusUi('on', $scope);
-      } else {
-        mainFactorysetStatusUi('off', $scope);
-      }
-    });
-  };
+  $scope.toggleStatus = mainFactory.toggleStatus.bind(this, status, $scope);
 
   mainFactory.getStatus(function(status) {
     mainFactory.setStatusUi(status, $scope);
