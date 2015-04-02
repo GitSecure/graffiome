@@ -33,5 +33,15 @@ angular.module('graffio.mainFactory', []).factory('mainFactory', function() {
     state.go('login');
   };
 
+  factory.setStatusUi = function(status, scope) {
+    scope.$apply(function() {
+      if (status === 'off') {
+        scope.onOffButtonTxt = 'On';
+      } else {
+        scope.onOffButtonTxt = 'Off';
+      }
+    });
+  };
+
   return factory;
 });

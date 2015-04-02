@@ -13,31 +13,21 @@ angular.module('graffio.mainController', [])
     $state.go('draw');
   }
 
-}).controller('onOffController', function($scope, mainFactory){ 
+}).controller('onOffController', function($scope, mainFactory){
   $scope.onOffButtonTxt = 'loading...';
-
-  var setStatusUi = function(status) {
-    $scope.$apply(function() {
-      if (status === 'off') {
-        $scope.onOffButtonTxt = 'On';
-      } else {
-        $scope.onOffButtonTxt = 'Off';
-      }
-    });
-  };
 
   $scope.toggleStatus = function() {
     mainFactory.getStatus(function(status, tabID) {
       mainFactory.sendTabMessage(status, tabID);
       if (status === 'off') {
-        setStatusUi('on');  
+        mainFactory.setStatusUi('on', $scope);
       } else {
-        setStatusUi('off');
+        mainFactorysetStatusUi('off', $scope);
       }
     });
   };
- 
+
   mainFactory.getStatus(function(status) {
-    setStatusUi(status);
+    mainFactory.setStatusUi(status, $scope);
   });
 })
