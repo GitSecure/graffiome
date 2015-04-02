@@ -26,5 +26,12 @@ angular.module('graffio.mainFactory', []).factory('mainFactory', function() {
     chrome.tabs.sendMessage(tabID, {toggle: msg}, function(res){
     });
   };
+
+  factory.logout = function(ref, state) {
+    ref.unauth();
+    chrome.runtime.sendMessage({action: 'clearToken'});
+    state.go('login');
+  };
+
   return factory;
 });

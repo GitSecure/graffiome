@@ -3,22 +3,16 @@ angular.module('graffio.mainController', [])
 .controller('mainController', function($scope, $state, mainFactory) {
   var ref = new Firebase('https://radiant-heat-919.firebaseio.com');
 
+  $scope.logout = mainFactory.logout.bind(this, ref, $state);
 
   mainFactory.getStatus(function(status, tabID) {
-    if (status.switch === 'on') {
-      $state.go('draw');
-    }
+    if (status.switch === 'on') $state.go('draw');
   });
 
   $scope.draw = function(){
     $state.go('draw');
   }
 
-  $scope.logout = function() {
-    ref.unauth();
-    chrome.runtime.sendMessage({action: 'clearToken'});
-    $state.go('login');
-  };
 }).controller('onOffController', function($scope, mainFactory){ 
   $scope.onOffButtonTxt = 'loading...';
 
