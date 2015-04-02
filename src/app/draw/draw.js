@@ -7,10 +7,10 @@ angular.module('graffio.drawController', [
   'ui.slider',
   'nya.bootstrap.select'
   ])
-.controller('drawController', function($scope, $state) {
+.controller('drawController', function($scope, $state, mainFactory) {
   // var ref = new Firebase('https://radiant-heat-919.firebaseio.com');
   
-  getStatus(function(status, tabID) {
+  mainFactory.getStatus(function(status, tabID) {
     // send a message to the tab and also set the current button value to be the opposite
     // ie. if a user clicks 'On' it should send a message telling the app to start drawing
     // and also change the UI here to indicate that the next click will turn the app off
@@ -36,9 +36,9 @@ angular.module('graffio.drawController', [
   };
 
   $scope.toggleStatus = function() {
-    getStatus(function(status, tabID) {
+    mainFactory.getStatus(function(status, tabID) {
       console.log("LINE 36 togglestatus:", status)
-      sendTabMessage(status, tabID);
+      mainFactory.sendTabMessage(status, tabID);
     });
   };
 
@@ -52,7 +52,7 @@ angular.module('graffio.drawController', [
   }
 
   $scope.erase = function(){
-    getCurrentTabID(function(activeTab){
+    mainFactory.getCurrentTabID(function(activeTab){
       chrome.tabs.sendMessage(activeTab, {erase: true}, function(res) {
         console.log(res)
       });
@@ -61,7 +61,7 @@ angular.module('graffio.drawController', [
 
   $scope.brushSelect = function(event, brush){
     console.log(brush);
-    getCurrentTabID(function(activeTab){
+    mainFactory.getCurrentTabID(function(activeTab){
       chrome.tabs.sendMessage(activeTab, {brushSelect: brush}, function(res) {
         console.log(res)
       });
@@ -71,7 +71,7 @@ angular.module('graffio.drawController', [
 
   $scope.changeWidth = function(event, thickness){
     console.log(thickness);
-    getCurrentTabID(function(activeTab){
+    mainFactory.getCurrentTabID(function(activeTab){
       chrome.tabs.sendMessage(activeTab, {changeWidth: thickness}, function(res) {
         console.log(res)
       });
@@ -80,7 +80,7 @@ angular.module('graffio.drawController', [
 
   $scope.changeColor = function(event, color){
     console.log(color);
-    getCurrentTabID(function(activeTab){
+    mainFactory.getCurrentTabID(function(activeTab){
       chrome.tabs.sendMessage(activeTab, {changeColor: color}, function(res) {
         console.log(res)
       });
@@ -88,7 +88,7 @@ angular.module('graffio.drawController', [
   };
 
   $scope.nyan = function(){
-    getCurrentTabID(function(activeTab){
+    mainFactory.getCurrentTabID(function(activeTab){
       chrome.tabs.sendMessage(activeTab, {image: 'static/nyan.gif'}, function(res) {
         console.log(res)
       });
