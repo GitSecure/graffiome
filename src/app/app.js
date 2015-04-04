@@ -2,8 +2,10 @@
 var app = angular.module('graffio', [
   'graffio.signupController',
   'graffio.loginController',
+  'graffio.authFactory',
   'graffio.mainController',
   'graffio.drawController',
+  'graffio.mainFactory',
   'colorpicker.module',
   'ui.bootstrap',
   'ui.router'
