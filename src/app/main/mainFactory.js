@@ -1,60 +1,61 @@
-'strict';
+(function() {
+  'strict';
+  angular.module('graffio.mainFactory', []).factory('mainFactory', function() {
+    var factory = {};
 
-angular.module('graffio.mainFactory', []).factory('mainFactory', function() {
-  var factory = {};
-
-  factory.getCurrentTabID = function(callback) {
-    chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
-      var currentTabId = tabs[0].id;
-      callback(currentTabId);
-    });
-  };
-
-  factory.getStatus = function(callback) {
-    factory.getCurrentTabID(function(tabID) {
-      chrome.tabs.sendMessage(tabID, {getStatus: true}, function(res) {
-        callback(res.status, tabID);
+    factory.getCurrentTabID = function(callback) {
+      chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+        var currentTabId = tabs[0].id;
+        callback(currentTabId);
       });
-    });
-  };
+    };
 
-  factory.sendTabMessage = function(status, tabID) {
-    var msg;
-    if (status.switch === 'off') {
-      msg = 'on';
-    } else {
-      msg = 'off';
-    }
-    chrome.tabs.sendMessage(tabID, {toggle: msg}, function(res){
-    });
-  };
+    factory.getStatus = function(callback) {
+      factory.getCurrentTabID(function(tabID) {
+        chrome.tabs.sendMessage(tabID, {getStatus: true}, function(res) {
+          callback(res.status, tabID);
+        });
+      });
+    };
 
-  factory.logout = function(ref, state) {
-    ref.unauth();
-    chrome.runtime.sendMessage({action: 'clearToken'});
-    state.go('login');
-  };
-
-  factory.setStatusUi = function(status, scope) {
-    scope.$apply(function() {
-      if (status === 'off') {
-        scope.onOffButtonTxt = 'On';
+    factory.sendTabMessage = function(status, tabID) {
+      var msg;
+      if (status.switch === 'off') {
+        msg = 'on';
       } else {
-        scope.onOffButtonTxt = 'Off';
+        msg = 'off';
       }
-    });
-  };
+      chrome.tabs.sendMessage(tabID, {toggle: msg}, function(res){
+      });
+    };
 
-  factory.toggleStatus = function(status, scope) {
-    factory.getStatus(function(status, tabID) {
-      factory.sendTabMessage(status, tabID);
-      if (status === 'off') {
-        factory.setStatusUi('on', scope);
-      } else {
-        factory.setStatusUi('off', scope);
-      }
-    });
-  };
+    factory.logout = function(ref, state) {
+      ref.unauth();
+      chrome.runtime.sendMessage({action: 'clearToken'});
+      state.go('login');
+    };
 
-  return factory;
-});
+    factory.setStatusUi = function(status, scope) {
+      scope.$apply(function() {
+        if (status === 'off') {
+          scope.onOffButtonTxt = 'On';
+        } else {
+          scope.onOffButtonTxt = 'Off';
+        }
+      });
+    };
+
+    factory.toggleStatus = function(status, scope) {
+      factory.getStatus(function(status, tabID) {
+        factory.sendTabMessage(status, tabID);
+        if (status === 'off') {
+          factory.setStatusUi('on', scope);
+        } else {
+          factory.setStatusUi('off', scope);
+        }
+      });
+    };
+
+    return factory;
+  });
+})();

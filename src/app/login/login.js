@@ -1,22 +1,8 @@
-'use strict';
-angular.module('graffio.loginController', [])
-.controller('loginController', function($scope, $state) {
-  var ref = new Firebase('https://radiant-heat-919.firebaseio.com');
-
-  $scope.logIn = function() {
-    console.log('login called!');
-    ref.authWithPassword({
-      email    : $scope.email,
-      password : $scope.password
-    }, function(error, authData) {
-      if (error) {
-        console.log('Login Failed!', error);
-      } else {
-        console.log('Authenticated successfully with payload:', authData);
-        // send the token to the background script so it can be accessed by each tab
-        chrome.runtime.sendMessage({action: 'setToken', token: authData.token});
-        $state.go('main');
-      }
-    });
-  };
-});
+(function() {
+  'use strict';
+  angular.module('graffio.loginController', [])
+  .controller('loginController', function($scope, $state, authFactory) {
+    var ref = new Firebase('https://radiant-heat-919.firebaseio.com');
+    $scope.logIn = authFactory.logIn.bind(this, ref, $scope, $state);
+  });
+})();
